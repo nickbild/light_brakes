@@ -6,6 +6,10 @@ import imutils
 import cv2
 
 
+min_pixels_for_masking = 300        # Min. number of connected bright pixels to get a mask.
+min_bright_pixel_value = 200        # Pixel intensity > this will be considered bright.
+
+
 ap = argparse.ArgumentParser()
 ap.add_argument("-i", "--image", required=True)
 args = vars(ap.parse_args())
@@ -16,7 +20,7 @@ gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 blurred = cv2.GaussianBlur(gray, (11, 11), 0)
 
 # Find bright regions with a threshold.
-thresh = cv2.threshold(blurred, 200, 255, cv2.THRESH_BINARY)[1]
+thresh = cv2.threshold(blurred, min_bright_pixel_value, 255, cv2.THRESH_BINARY)[1]
 
 # Remove noise.
 thresh = cv2.erode(thresh, None, iterations=2)
@@ -39,7 +43,7 @@ for label in np.unique(labels):
 
 	# If minimum size requirement met, add current label
     # mask to global mask.
-	if numPixels > 300:
+	if numPixels > min_pixels_for_masking:
 		mask = cv2.add(mask, labelMask)
 
 # for r in range(len(mask)):
