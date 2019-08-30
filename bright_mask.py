@@ -12,10 +12,11 @@ import imutils
 import cv2
 
 
+# Size of image to capture (should match size of LCD display).
 img_width = 84
 img_height = 48
 
-min_pixels_for_masking = 300        # Min. number of connected bright pixels to get a mask.
+min_pixels_for_masking = 20         # Min. number of connected bright pixels to get a mask.
 min_bright_pixel_value = 200        # Pixel intensity > this will be considered bright.
 
 # GPIO pin numbers.
@@ -32,9 +33,12 @@ def clear_lcd(disp, image):
 	disp.display()
 
 
-def draw_point(disp, image):
-	draw.point((10,10), fill=None)
-	draw.point((20,20), fill=None)
+def draw_points(disp, image, data):
+	for r in range(len(data)):
+		for c in range(len(data[r])):
+			if data[r][c] == 255:
+				draw.point((c, r), fill=None)
+
 	disp.image(image)
 	disp.display()
 
@@ -97,12 +101,11 @@ if cap.isOpened():
 			if numPixels > min_pixels_for_masking:
 				mask = cv2.add(mask, labelMask)
 
-		# for r in range(len(mask)):
-		#     for c in range(len(mask[r])):
-		#         print(mask[r][c])
-
 		# cv2.imshow("Image", mask)
 		# cv2.waitKey(0)
 
 		clear_lcd(disp, lcd_image)
-		draw_point(disp, lcd_image)
+		draw_points(disp, lcd_image, mask)
+
+else:
+	print('Unable to open camera.')
