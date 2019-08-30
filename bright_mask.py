@@ -33,11 +33,17 @@ def clear_lcd(disp, image):
 	disp.display()
 
 
-def draw_points(disp, image, data):
+def draw_points(disp, image, data, old_data):
 	for r in range(len(data)):
 		for c in range(len(data[r])):
+			# Skip updates if data hasn't changed.
+			if data[r][c] == old_data[r][c]:
+				continue
+
 			if data[r][c] == 255:
-				draw.point((c, r), fill=None)
+				draw.point((c, r), fill=0)
+			elif data[r][c] == 0:
+				draw.point((c, r), fill=255)
 
 	disp.image(image)
 	disp.display()
@@ -63,6 +69,9 @@ lcd_image = Image.new('1', (LCD.LCDWIDTH, LCD.LCDHEIGHT))
 draw = ImageDraw.Draw(lcd_image)
 
 cap = cv2.VideoCapture(gstreamer_pipeline(flip_method=2), cv2.CAP_GSTREAMER)
+old_mask = np.zeros((LCD.LCDHEIGHT, LCD.LCDWIDTH), dtype="uint8")
+
+clear_lcd(disp, lcd_image)
 
 if cap.isOpened():
 	while True:
@@ -101,11 +110,8 @@ if cap.isOpened():
 			if numPixels > min_pixels_for_masking:
 				mask = cv2.add(mask, labelMask)
 
-		# cv2.imshow("Image", mask)
-		# cv2.waitKey(0)
-
-		clear_lcd(disp, lcd_image)
-		draw_points(disp, lcd_image, mask)
+		draw_points(disp, lcd_image, mask, old_mask)
+		old_mask = mask
 
 else:
 	print('Unable to open camera.')
