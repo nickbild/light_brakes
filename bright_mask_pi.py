@@ -1,5 +1,4 @@
 import time
-import Jetson.GPIO as GPIO
 import Adafruit_Nokia_LCD as LCD
 import Adafruit_GPIO.SPI as SPI
 from PIL import Image
@@ -49,18 +48,8 @@ def draw_points(disp, image, data, old_data):
 	disp.display()
 
 
-def gstreamer_pipeline (capture_width=1050, capture_height=600, display_width=img_width, display_height=img_height, framerate=21, flip_method=2) :
-    return ('nvarguscamerasrc ! '
-    'video/x-raw(memory:NVMM), '
-    'width=(int)%d, height=(int)%d, '
-    'format=(string)NV12, framerate=(fraction)%d/1 ! '
-    'nvvidconv flip-method=%d ! '
-    'video/x-raw, width=(int)%d, height=(int)%d, format=(string)BGRx ! '
-    'videoconvert ! '
-    'video/x-raw, format=(string)BGR ! appsink'  % (capture_width,capture_height,framerate,flip_method,display_width,display_height))
-
-
 # LCD initialization.
+# disp = LCD.PCD8544(DC, RST, spi=SPI.SpiDev(SPI_PORT, SPI_DEVICE, max_speed_hz=4000000))
 disp = LCD.PCD8544(DC, RST, SCLK, DIN, CS)
 disp.begin(contrast=60)
 disp.clear()
@@ -68,7 +57,9 @@ disp.display()
 lcd_image = Image.new('1', (LCD.LCDWIDTH, LCD.LCDHEIGHT))
 draw = ImageDraw.Draw(lcd_image)
 
-cap = cv2.VideoCapture(gstreamer_pipeline(flip_method=2), cv2.CAP_GSTREAMER)
+camera = PiCamera()
+cap = PiRGBArray(camera)
+
 old_mask = np.zeros((LCD.LCDHEIGHT, LCD.LCDWIDTH), dtype="uint8")
 
 clear_lcd(disp, lcd_image)
