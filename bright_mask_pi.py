@@ -104,6 +104,7 @@ while True:
 	    # mask to global mask.
 		if numPixels > min_pixels_for_masking:
 			mask = cv2.add(mask, labelMask)
+			print("OK")
 
 	draw_points(disp, lcd_image, mask, old_mask)
 	old_mask = mask
