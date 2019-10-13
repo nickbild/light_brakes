@@ -99,6 +99,8 @@ Frustratingly, when I powered it up -- nothing.  My multimeter showed continuity
 
 ![new_design](https://raw.githubusercontent.com/nickbild/light_brakes/master/img/new_design.jpg)
 
+Some hot glue to hold the LCD to the board, and short stretches of silver epoxy to connect the pads.  It was still a challenge to keep the traces isolated from one another, but it was doable with patience.
+
 It took me weeks to get here, but finally, it works!  This is not an exhaustive list of all my failures by any stretch of the imagination.  There were the flat flexible cables, the solder paste, and the clamped wires held in place with mechanical force -- too painful to recount it all!
 
 ## Future Direction
