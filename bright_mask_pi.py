@@ -51,7 +51,7 @@ def draw_points(disp, image, data, old_data):
 # LCD initialization.
 disp = LCD.PCD8544(DC, RST, spi=SPI.SpiDev(SPI_PORT, SPI_DEVICE, max_speed_hz=4000000))
 # disp = LCD.PCD8544(DC, RST, SCLK, DIN, CS)
-disp.begin(contrast=60)
+disp.begin(contrast=100)
 disp.clear()
 disp.display()
 lcd_image = Image.new('1', (LCD.LCDWIDTH, LCD.LCDHEIGHT))
